@@ -17,10 +17,14 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
       - name: Generate Documentation
         uses: SwiftDocOrg/swift-doc@master
         with:
           inputs: "Sources"
           module-name: Loadability
           output: "docs"
+      - name: Publish Documentation
+      - uses: mikeal/publish-to-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH_NAME: 'main'
