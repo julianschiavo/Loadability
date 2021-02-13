@@ -1,5 +1,7 @@
 # 📩 Loadability
-### Powerful, modern networking and caching with SwiftUI support 
+### Powerful, modern networking and caching with SwiftUI support
+
+<br>
 
 **Loadability** is an advanced networking and caching library for Swift that allows you to effortlessly implement a custom networking and/or caching stack in your app, with native support for `Combine` and `SwiftUI`.
 
@@ -43,15 +45,15 @@ If you prefer not to use SPM, you can also add **Loadability** as a normal frame
 
 ## Usage
 
-Loadability declares basic protocols and classes that you extend in your app to build loaders and caches. It also has an (optional) `SwiftUI` integration (see [below](swiftui-integration)) for views to load their data and show placeholders while loading.
+Loadability declares basic protocols and classes that you extend in your app to build loaders and caches. It also has an (optional) `SwiftUI` integration (see [below](#swiftui-integration)) for views to load their data and show placeholders while loading.
 
 The library has extensive inline documentation in all files. If you are looking to gain an advanced understanding of the library, or to implement something not discussed below, please consult the inline documentation before filing an issue.
 
-*Note that the code snippets in this section have some code omitted for brevity; see the [Examples](examples) section for complete code examples.*
+*Note that the code snippets in this section have some code omitted for brevity; see the [Examples](#examples) section for complete code examples.*
 
 ### Networking
 
-Loadability networking in centered around the concept of loaders. A `Loader` loads data from some source and publishes it as an `ObservableObject`, which you can observe manually or integrate through the [`SwiftUI` support](swiftui-integration).
+Loadability networking in centered around the concept of loaders. A `Loader` loads data from some source and publishes it as an `ObservableObject`, which you can observe manually or integrate through the [`SwiftUI` support](#swiftui-integration).
 
 To create a loader, you can create a class that conforms to the abstract `Loader` protocol, or conform to one of the sub-protocols that implement default behaviour, such as `SimpleNetworkLoader` and `CachedLoader`.
 
@@ -84,7 +86,7 @@ class YourLoader: Loader {
 }
 ```
 
-As noted previously, loaders automatically conform to `ObservableObject`; you can observe the published properties yourself or use the [SwiftUI integration](swiftui-integration).
+As noted previously, loaders automatically conform to `ObservableObject`; you can observe the published properties yourself or use the [SwiftUI integration](#swiftui-integration).
 
 #### Specific Loaders
 
@@ -114,7 +116,7 @@ class YourLoader: SimpleNetworkLoader {
 
 `CachedLoader` uses the caching system discussed below to implement a loader that caches loaded data. You are encouraged to use this loader when you want to cache your data instead of implementing your own caching loader, as it handles tasks such as pre-loading cached data and updating the cache asynchronously after loads.
 
-This is an example of a `CachedLoader` subclass (see the [Caching](caching) section to learn how to create a `Cache`).
+This is an example of a `CachedLoader` subclass (see the [Caching](#caching) section to learn how to create a `Cache`).
 ```swift
 class YourLoader: CachedLoader {
     @Published var object: YourObject?
@@ -181,7 +183,7 @@ Instead of creating multiple cache instances, use the `shared` instance every ti
 
 #### Using Caches with Loaders
 
-As discussed above in the [CachedLoader](cachedloader) section under Loaders, Loadability has an integration between caches and loaders. Although you can use cache instances directly with custom loaders, it is *strongly* recommended to use a shared cache and `CachedLoader`, as loaders are, by definition, created for each object that is loaded.
+As discussed above in the [CachedLoader](#cachedloader) section under Loaders, Loadability has an integration between caches and loaders. Although you can use cache instances directly with custom loaders, it is *strongly* recommended to use a shared cache and `CachedLoader`, as loaders are, by definition, created for each object that is loaded.
 
 Create a shared cache following the code in the previous section on shared caches, and set the `cache` variable in your loader to the class's type (e.g. `YourCache.self`).
 
@@ -229,8 +231,7 @@ Please review our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contribution Guidel
 
 **Loadability** was originally created by [Julian Schiavo](https://twitter.com/julianschiavo) in his spare time, and made available under the [MIT License](LICENSE). If you find the library useful, please consider [sponsoring me on Github](https://github.com/julianschiavo/sponsors), which contributes to development and learning resources, and allows me to keep making cool stuff like this!
 
-
-
+Loadability is inspired by (and uses code by permission) from John Sundell's in depth blog posts on [Handling loading states within SwiftUI views](https://www.swiftbysundell.com/articles/handling-loading-states-in-swiftui/) and [Caching in Swift](https://swiftbysundell.com/articles/caching-in-swift/), so thank you to John for the inspiration and examples. If you want to gain a better understanding of loading or caching in Swift, I strongly recommend you check out the articles linked above, in addition to his many other articles!
 
 ## License
 
