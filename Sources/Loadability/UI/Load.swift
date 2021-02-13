@@ -28,13 +28,6 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
         }
     }
     
-    /// Creates
-    /// - Parameters:
-    ///   - loader: <#loader description#>
-    ///   - key: <#key description#>
-    ///   - objectKeyPath: <#objectKeyPath description#>
-    ///   - contentBuilder: <#contentBuilder description#>
-    ///   - placeholderContentBuilder: <#placeholderContentBuilder description#>
     public init(with loader: Loader,
          key: Loader.Key,
          objectKeyPath: KeyPath<Loader.Object, Value?>,
@@ -75,7 +68,7 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
             }
     }
     
-    /// <#Description#>
+    /// The content shown.
     @ViewBuilder private var bodyContent: some View {
         if let value = value {
             contentBuilder(value)

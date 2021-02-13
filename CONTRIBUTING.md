@@ -20,7 +20,7 @@ Please make sure you read the documentation (inline in the source files) and [RE
 
 ## Project structure
 
-Loadability is structured in the default way for Swift Packages. Source code is in the `Source/Loadability` directory, with each type in a separate file.
+Loadability is structured in the default way for Swift Packages. Source code is in the `Source/Loadability` directory, with each type in a separate file. The library has extensive documentation; please ensure that additive changes have high-quality documentation.
 
 ## Conclusion
 
