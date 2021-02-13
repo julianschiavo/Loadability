@@ -47,7 +47,7 @@ If you prefer not to use SPM, you can also add **Loadability** as a normal frame
 
 Loadability declares basic protocols and classes that you extend in your app to build loaders and caches. It also has an (optional) `SwiftUI` integration (see [below](#swiftui-integration)) for views to load their data and show placeholders while loading.
 
-The library has [extensive documentation](#usage). If you are looking to gain an advanced understanding of the library, or to implement something not discussed below, please consult the inline documentation before filing an issue.
+The library has [extensive documentation](https://julianschiavo.github.io/Loadability/). If you are looking to gain an advanced understanding of the library, or to implement something not discussed below, please consult the inline documentation before filing an issue.
 
 *Note that the code snippets in this section have some code omitted for brevity; see the [Examples](#examples) section for complete code examples.*
 
