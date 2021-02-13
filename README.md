@@ -1,9 +1,9 @@
 # 📩 Loadability
-### Powerful, modern networking and caching for SwiftUI 
+### Powerful, modern networking and caching with SwiftUI support 
 
-**Loadability** is a powerful, modern networking and caching library 
+**Loadability** is an advanced networking and caching library for Swift that allows you to effortlessly implement a custom networking and/or caching stack in your app, with native support for `Combine` and `SwiftUI`.
 
-
+Loadability uses Apple's `Combine` framework to publish loaded objects and errors, and has built-in `SwiftUI` support to create views that load content and display placeholders while loading. 
 
 ## Requirements
 
@@ -41,20 +41,107 @@ let package = Package(
 
 If you prefer not to use SPM, you can also add **Loadability** as a normal framework by building the library from this repository. (See other sources for instructions on doing this.)
 
-<br>
-
 ## Usage
 
+Loadability declares basic protocols and classes that you extend in your app to build loaders and caches. It also has an (optional) `SwiftUI` integration (see [below](swiftui)) for views to load their data and show placeholders while loading.
+
+*Note that the code snippets in this section have some code omitted for brevity; see the [Examples](examples) section for complete code examples.*
+
+### Networking
+
+Loadability networking in centered around the concept of loaders. A `Loader` loads data from some source and publishes it as an `ObservableObject`, which you can observe manually or integrate through the [`SwiftUI` support](swiftui).
+
+To create a loader, you can create a class that conforms to the abstract `Loader` protocol, or conform to one of the sub-protocols that implement default behaviour, such as `SimpleNetworkLoader` and `CachedLoader`.
+
+Loaders have some minimal shared requirements, including published properties for the object and a possible error while loading, and methods that load the data. You can extend loaders to conform to your own custom requirements.
+
+This is an example of a loader. Each loader has an associated type for the object type that is loaded, and the key that is used by the loader to identify the object to load.
+```swift
+class YourLoader: Loader {
+    @Published var object: YourObject?
+    @Published var error: IdentifiableError?
+
+    func createRequest(for key: YourKey) -> URLRequest {
+        URLRequest(url: /* some URL */)
+    }
+
+    func createPublisher(key: YourKey) -> AnyPublisher<YourObject, Error>? {
+        let request = createRequest(for: key)
+        return URLSession.shared
+            .dataTaskPublisher(for: request)
+            .retry(3)
+            .tryMap { data, response in
+                try self.decode(data, key: key)
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    private func decode(_ data: Data, key: YourKey) throws -> YourObject {
+        /* decode the data, for example, using a JSONDecoder */
+    }
+}
+```
+
+As noted previously, loaders automatically conform to `ObservableObject`; you can observe the published properties yourself or use the [SwiftUI integration](swiftui).
 
 
-<br>
+#### Specific Loaders
+
+Loadability has a few specific built-in loaders that implement common requirements, reducing the code required for some implementations. You can subclass a specific built-in loader instead of the general `Loader` protocol if it meets your needs.
+
+##### `SimpleNetworkLoader`
+
+`SimpleNetworkLoader` implements a basic networking loader, with optional predefined `Codable` decoding support. You can use this loader for instances where you want a default network loader.
+
+An example of this loader is shown here; as you can see, it is simpler to implement than a full `Loader` subclass, handling the networking code for you using only a `URLRequest` you create. You can create a custom decoding implementation to decode the `Data` received from the network request, or, if your object type conforms to `Codable`, take advantage of the predefined decoding implementation which uses a `JSONDecoder`.
+```swift
+class YourLoader: SimpleNetworkLoader {
+    @Published var object: YourObject?
+    @Published var error: IdentifiableError?
+
+    func createRequest(for key: YourKey) -> URLRequest {
+        URLRequest(url: /* some URL */)
+    }
+    
+    func decode(_ data: Data, key: YourKey) throws -> YourObject {
+        /* optional custom decoding implementation */
+    }
+}
+```
+
+##### `CachedLoader`
+
+`CachedLoader` uses the caching system discussed below to implement a loader that caches loaded data. You are encouraged to use this loader when you want to cache your data instead of implementing your own caching loader, as it handles tasks such as pre-loading cached data and updating the cache asynchronously after loads.
+
+This is an example of a `CachedLoader` subclass (see the [Caching](caching) section to learn how to create a `Cache`).
+```swift
+class YourLoader: CachedLoader {
+    @Published var object: YourObject?
+    @Published var error: IdentifiableError?
+
+    var cache = YourCache.self /* a SharedCache or SharedSerializableCache type */
+    
+    func createRequest(for key: YourKey) -> URLRequest {
+        URLRequest(url: /* some URL */)
+    }
+
+    func createPublisher(key: YourKey) -> AnyPublisher<YourObject, Error>? {
+        /* see the Loader example above */
+    }
+
+    private func decode(_ data: Data, key: YourKey) throws -> YourObject {
+        /* see the Loader example above */
+    }
+}
+```
+The code is similar to the `Loader` snippet, as the caching is handled for you internally by the library; you simply need to provide a `Cache` which will be used.
+
+### Caching
 
 ## Examples
 
 ### []()
 
-
-<br>
 
 ## Contributing
 
@@ -62,16 +149,12 @@ Contributions and pull requests are welcomed by anyone! If you find an issue wit
 
 Please review our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contribution Guidelines](CONTRIBUTING.md) before making a contribution.
 
-<br>
-
 ## Credits & Sponsoring
 
 **Loadability** was originally created by [Julian Schiavo](https://twitter.com/julianschiavo) in his spare time, and made available under the [MIT License](LICENSE). If you find the library useful, please consider [sponsoring me on Github](https://github.com/julianschiavo/sponsors), which contributes to development and learning resources, and allows me to keep making cool stuff like this!
 
 
 
-
-<br>
 
 ## License
 
