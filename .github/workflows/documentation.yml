@@ -21,6 +21,7 @@ jobs:
           module-name: Loadability
           output: "docs"
           format: "html"
+          base-url: "/Loadability/"
       - name: Publish Documentation
         uses: mikeal/publish-to-github-action@master
         env:
