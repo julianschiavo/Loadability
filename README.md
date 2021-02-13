@@ -47,7 +47,7 @@ If you prefer not to use SPM, you can also add **Loadability** as a normal frame
 
 Loadability declares basic protocols and classes that you extend in your app to build loaders and caches. It also has an (optional) `SwiftUI` integration (see [below](#swiftui-integration)) for views to load their data and show placeholders while loading.
 
-The library has extensive inline documentation in all files. If you are looking to gain an advanced understanding of the library, or to implement something not discussed below, please consult the inline documentation before filing an issue.
+The library has [extensive documentation](#usage). If you are looking to gain an advanced understanding of the library, or to implement something not discussed below, please consult the inline documentation before filing an issue.
 
 *Note that the code snippets in this section have some code omitted for brevity; see the [Examples](#examples) section for complete code examples.*
 
@@ -229,7 +229,7 @@ Please review our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contribution Guidel
 
 ## Credits & Sponsoring
 
-**Loadability** was originally created by [Julian Schiavo](https://twitter.com/julianschiavo) in his spare time, and made available under the [MIT License](LICENSE). If you find the library useful, please consider [sponsoring me on Github](https://github.com/julianschiavo/sponsors), which contributes to development and learning resources, and allows me to keep making cool stuff like this!
+**Loadability** was originally created by [Julian Schiavo](https://twitter.com/julianschiavo) in his spare time, and made available under the [MIT License](LICENSE). If you find the library useful, please consider [sponsoring me on Github](https://github.com/sponsors/julianschiavo), which contributes to development and learning resources, and allows me to keep making cool stuff like this!
 
 Loadability is inspired by (and uses code by permission) from John Sundell's in depth blog posts on [Handling loading states within SwiftUI views](https://www.swiftbysundell.com/articles/handling-loading-states-in-swiftui/) and [Caching in Swift](https://swiftbysundell.com/articles/caching-in-swift/), so thank you to John for the inspiration and examples. If you want to gain a better understanding of loading or caching in Swift, I strongly recommend you check out the articles linked above, in addition to his many other articles!
 
