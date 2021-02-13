@@ -138,6 +138,20 @@ The code is similar to the `Loader` snippet, as the caching is handled for you i
 
 ### Caching
 
+In addition to networking, Loadability has support for caching as a Swift implementation built on top of Apple's `NSCache` with a number of additional features including support for serialization (saving caches to disk for reuse).
+
+The basic  `Cache` class is a basic wrapper for `NSCache`, supporting the same features as the Objective-C version. Create an instance of `Cache`, and use subscripts to access, modify, or delete values, as such:
+
+```swift
+let cache = Cache<YourKey, YourObject>()
+cache[key] = YourObject() // Add value
+cache[key] = YourObject(someParameter: true) // Modify value
+let object = cache[key] // YourObject?, Access cached value
+cache[key] = nil // Remove value
+```
+
+`SerializableCache` subclasses the base `Cache` class to add support for saving caches to disk, which allows you to 
+
 ## Examples
 
 ### []()

@@ -16,7 +16,7 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
     ///   - name: The unique name for the cache.
     ///   - autoRemoveStaleItems: Whether to automatically remove stale items, defaults to `false`.
     ///   - folderURL: The folder in which to store the cache, defaults to the system cache directory.
-    public init(name: String,
+    private init(name: String,
          shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false,
          folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first) {
         
