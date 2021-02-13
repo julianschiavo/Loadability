@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loadability - SerializableCache</title>
-    <link rel="stylesheet" type="text/css" href="./all.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="/Loadability/all.css" media="all" />
 </head>
 <body>
     <header>
-        <a href="./">
+        <a href="/Loadability/">
             <strong>
                 Loadability
             </strong>
@@ -37,7 +37,7 @@
     <code class="name">Serializable​Cache</code>
 </h1>
 
-<html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="attribute">final</span> <span class="keyword">class</span> <span class="type">SerializableCache</span>&lt;<span class="variable">Key</span>: <span class="type">Codable</span> &amp; <span class="type">Hashable</span> &amp; <span class="type">Identifiable</span>, <span class="variable">Value</span>: <span class="type">Codable</span>&gt;: <a href="./Cache"><span class="type">Cache</span></a>&lt;<span class="type">Key</span>, <span class="type">Value</span>&gt;, <span class="type">Codable</span></code></pre></body></html>
+<html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="attribute">final</span> <span class="keyword">class</span> <span class="type">SerializableCache</span>&lt;<span class="variable">Key</span>: <span class="type">Codable</span> &amp; <span class="type">Hashable</span> &amp; <span class="type">Identifiable</span>, <span class="variable">Value</span>: <span class="type">Codable</span>&gt;: <a href="/Loadability/Cache"><span class="type">Cache</span></a>&lt;<span class="type">Key</span>, <span class="type">Value</span>&gt;, <span class="type">Codable</span></code></pre></body></html>
 <div class="summary" role="doc-abstract">
     <p>A mutable collection, with support for serialization and storage, used to store key-value pairs that are subject to eviction when resources are low.</p>
 
@@ -59,7 +59,7 @@
 <!-- SerializableCache -->
 <g id="node1" class="node class current">
 <title>SerializableCache</title>
-<g id="a_node1"><a xlink:href="./SerializableCache" xlink:title="SerializableCache">
+<g id="a_node1"><a xlink:href="/Loadability/SerializableCache" xlink:title="SerializableCache">
 <path fill="none" stroke="#000000" stroke-width="3" d="M528,-108C528,-108 336,-108 336,-108 330,-108 324,-102 324,-96 324,-96 324,-84 324,-84 324,-78 330,-72 336,-72 336,-72 528,-72 528,-72 534,-72 540,-78 540,-84 540,-84 540,-96 540,-96 540,-102 534,-108 528,-108"/>
 <text text-anchor="middle" x="432" y="-86.3" font-family="Menlo" font-size="14.00" fill="#000000">SerializableCache</text>
 </a>
@@ -72,7 +72,7 @@
 <text text-anchor="middle" x="207" y="-14.3" font-family="Menlo" font-size="14.00" fill="#000000">Codable</text>
 </g>
 <!-- SerializableCache&#45;&gt;Codable -->
-<g id="edge1" class="edge conformsTo">
+<g id="edge2" class="edge conformsTo">
 <title>SerializableCache&#45;&gt;Codable</title>
 <path fill="none" stroke="#000000" d="M375.5134,-71.9243C344.4871,-61.9959 305.8297,-49.6255 273.3694,-39.2382"/>
 <polygon fill="#000000" stroke="#000000" points="274.1008,-35.7975 263.5098,-36.0831 271.9673,-42.4645 274.1008,-35.7975"/>
@@ -84,7 +84,7 @@
 <text text-anchor="middle" x="657" y="-14.3" font-family="Menlo" font-size="14.00" fill="#000000">Cache&lt;Key, Value&gt;</text>
 </g>
 <!-- SerializableCache&#45;&gt;Cache&lt;Key, Value&gt; -->
-<g id="edge2" class="edge conformsTo">
+<g id="edge1" class="edge conformsTo">
 <title>SerializableCache&#45;&gt;Cache&lt;Key, Value&gt;</title>
 <path fill="none" stroke="#000000" d="M488.4866,-71.9243C519.5129,-61.9959 558.1703,-49.6255 590.6306,-39.2382"/>
 <polygon fill="#000000" stroke="#000000" points="592.0327,-42.4645 600.4902,-36.0831 589.8992,-35.7975 592.0327,-42.4645"/>
@@ -186,7 +186,7 @@
     <h3>
         <code>load(name:​should​Automatically​Remove​Stale​Items:​folder​URL:​)</code>
     </h3>
-    <html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">load</span>(<span class="variable">name</span>: <span class="type">String</span>, <span class="variable">shouldAutomaticallyRemoveStaleItems</span>: <span class="type">Bool</span> = <span class="keyword">false</span>, <span class="variable">folderURL</span>: <span class="type">URL</span>? = <span class="variable">FileManager</span>.<span class="type">default</span>.<span class="type">urls</span>(<span class="variable">for</span>: .<span class="variable">cachesDirectory</span>, <span class="variable">in</span>: .<span class="variable">userDomainMask</span>).<span class="type">first</span>) -&gt; <a href="./SerializableCache"><span class="type">SerializableCache</span></a>&lt;<span class="type">Key</span>, <span class="type">Value</span>&gt;</code></pre></body></html>
+    <html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">func</span> <span class="function">load</span>(<span class="variable">name</span>: <span class="type">String</span>, <span class="variable">shouldAutomaticallyRemoveStaleItems</span>: <span class="type">Bool</span> = <span class="keyword">false</span>, <span class="variable">folderURL</span>: <span class="type">URL</span>? = <span class="variable">FileManager</span>.<span class="type">default</span>.<span class="type">urls</span>(<span class="variable">for</span>: .<span class="variable">cachesDirectory</span>, <span class="variable">in</span>: .<span class="variable">userDomainMask</span>).<span class="type">first</span>) -&gt; <a href="/Loadability/SerializableCache"><span class="type">SerializableCache</span></a>&lt;<span class="type">Key</span>, <span class="type">Value</span>&gt;</code></pre></body></html>
 <div class="summary" role="doc-abstract">
     <p>Loads a previously-serialized cache from disk.</p>
 
@@ -235,7 +235,7 @@
 
     <footer>
         <p>
-    Generated on <time datetime="2021-02-13T14:43:00+0000">February 13, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-beta.5</span>.
+    Generated on <time datetime="2021-02-13T14:45:10+0000">February 13, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-beta.5</span>.
 </p>
     </footer>
 </body>
