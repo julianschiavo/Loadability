@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loadability - Cache</title>
+    <link rel="stylesheet" type="text/css" href="/Loadability/all.css" media="all" />
+</head>
+<body>
+    <header>
+        <a href="/Loadability/">
+            <strong>
+                Loadability
+            </strong>
+            <span>Documentation</span>
+        </a>
+        <sup>Beta</sup>
+    </header>
+
+    <!--
+    <form class="search">
+        <input type="search" placeholder="Search" />
+    </form>
+    -->
+
+    <nav>
+        <div class="wrapper">
+            <h2>On This Page</h2>
+            <ol><li><a href="#initializers">Initializers</a><ul><li class="initializer"><a href="#cache.init(shouldautomaticallyremovestaleitems:)">init(should​Automatically​Remove​Stale​Items:​)</a></li></ul></li></ol>
+        </div>
+    </nav>
+
+    <main>
+        <article>
+            <h1>
+    <small>Class</small>
+    <code class="name">Cache</code>
+</h1>
+
+<html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">class</span> <span class="type">Cache</span>&lt;<span class="variable">Key</span>: <span class="type">Hashable</span> &amp; <span class="type">Identifiable</span>, <span class="variable">Value</span>&gt;</code></pre></body></html>
+<div class="summary" role="doc-abstract">
+    <p>A mutable collection used to store key-value pairs that are subject to eviction when resources are low.</p>
+
+</div>
+
+    <section id="initializers">
+        <h2>Initializers</h2>
+
+        <div role="article" class="initializer" id="cache.init(shouldautomaticallyremovestaleitems:)">
+    <h3>
+        <code>init(should​Automatically​Remove​Stale​Items:​)</code>
+    </h3>
+    <html><body><pre class="highlight"><code><span class="keyword">public</span> <span class="keyword">init</span>(<span class="variable">shouldAutomaticallyRemoveStaleItems</span> <span class="variable">autoRemoveStaleItems</span>: <span class="type">Bool</span> = <span class="keyword">false</span>)</code></pre></body></html>
+<div class="summary" role="doc-abstract">
+    <p>Creates a new <code>Cache</code></p>
+
+</div>
+<h4>Parameters</h4>
+
+<table class="parameters">
+  <thead hidden>
+  <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Description</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <th>auto​Remove​Stale​Items</th>
+    <td><code class="type">Bool</code></td>
+    <td><p>Whether to automatically remove stale items, <code>false</code> by default.</p>
+</td>
+</tr>
+  </tbody>
+</table>
+</div>
+    </section>
+
+
+
+        </article>
+    </main>
+
+    <footer>
+        <p>
+    Generated on <time datetime="2021-02-13T14:45:10+0000">February 13, 2021</time> using <a href="https://github.com/SwiftDocOrg/swift-doc">swift-doc</a> <span class="version">1.0.0-beta.5</span>.
+</p>
+    </footer>
+</body>
+</html>
