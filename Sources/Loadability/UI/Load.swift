@@ -84,7 +84,7 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
     /// Presents an alert to the user if an error occurs.
     /// - Parameters:
     ///   - alertContent: Content to display in the alert.
-    func displayingErrors(_ alertContent: ((Error) -> Alert)?) -> some View {
+    public func displayingErrors(_ alertContent: ((Error) -> Alert)?) -> some View {
         body.alert(errorBinding: $loader.error, alert: alertContent)
     }
 }
