@@ -13,7 +13,6 @@ public extension CachedLoader {
     func load(key: Key) {
         loadCachedData(key: key)
         if cache.isValueStale(key) {
-            print("LOADER STALE", String(describing: self))
             loadData(key: key)
         }
     }
