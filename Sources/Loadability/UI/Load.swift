@@ -59,7 +59,6 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
     
     public var body: some View {
         bodyContent
-            .alert(errorBinding: $loader.error)
             .onAppear {
                 loader.load(key: key)
             }
@@ -80,6 +79,13 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
     /// The placeholder shown while loading.
     private var placeholderContent: some View {
         placeholderContentBuilder()
+    }
+    
+    /// Presents an alert to the user if an error occurs.
+    /// - Parameters:
+    ///   - alertContent: Content to display in the alert.
+    func displayingErrors(_ alertContent: ((Error) -> Alert)?) -> some View {
+        body.alert(errorBinding: $loader.error, alert: alertContent)
     }
 }
 
