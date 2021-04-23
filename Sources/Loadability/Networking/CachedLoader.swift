@@ -20,9 +20,11 @@ public extension CachedLoader {
     /// Attempts to load data from the cache.
     /// - Parameter key: The key identifying the object to load.
     private func loadCachedData(key: Key) {
-        guard let object = cache[key] else { return }
-        DispatchQueue.main.async {
-            self.object = object
+        DispatchQueue.global(qos: .userInteractive).async {
+            guard let object = cache[key] else { return }
+            DispatchQueue.main.async {
+                self.object = object
+            }
         }
     }
     
@@ -37,7 +39,9 @@ public extension CachedLoader {
     }
     
     func loadCompleted(key: Key, object: Object) {
-        cache[key] = object
+        DispatchQueue.global(qos: .userInteractive).async {
+            cache[key] = object
+        }
     }
 }
 
