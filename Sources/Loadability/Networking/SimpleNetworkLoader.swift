@@ -21,6 +21,7 @@ public extension SimpleNetworkLoader {
         let request = createRequest(for: key)
         return URLSession.shared
             .dataTaskPublisher(for: request)
+            .subscribe(on: DispatchQueue.global(qos: .userInitiated))
             .retry(3)
             .tryMap { data, response in
                 try self.decode(data, key: key)

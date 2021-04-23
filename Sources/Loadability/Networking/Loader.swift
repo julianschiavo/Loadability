@@ -45,18 +45,15 @@ public extension Loader {
     }
     
     func loadData(key: Key) {
-        DispatchQueue.global(qos: .userInteractive).async {
-            self.cancellable = self.createPublisher(key: key)?
-                .receive(on: DispatchQueue.global(qos: .userInteractive))
-                .sink { [weak self] completion in
-                    self?.catchCompletion(completion)
-                } receiveValue: { [weak self] object in
-                    DispatchQueue.main.async {
-                        self?.object = object
-                        self?.loadCompleted(key: key, object: object)
-                    }
-                }
-        }
+        self.cancellable = self.createPublisher(key: key)?
+            .subscribe(on: DispatchQueue.global(qos: .userInitiated))
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.catchCompletion(completion)
+            } receiveValue: { [weak self] object in
+                self?.object = object
+                self?.loadCompleted(key: key, object: object)
+            }
     }
     
     func loadCompleted(key: Key, object: Object) {
