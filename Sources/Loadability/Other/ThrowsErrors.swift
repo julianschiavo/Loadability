@@ -2,7 +2,7 @@ import Combine
 import SwiftUI
 
 /// A type that can throw errors that should be shown to the user.
-public protocol ThrowsErrors {
+@MainActor public protocol ThrowsErrors {
     /// An error, if one occurred. Must be annotated with a publisher property wrapper, such as `@State` or `@Published`, to work.
     var error: Error? { get nonmutating set }
 }
