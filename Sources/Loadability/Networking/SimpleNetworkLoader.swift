@@ -2,6 +2,7 @@ import Combine
 import Foundation
 
 /// A type that can load data from over the network and throw errors.
+@MainActor
 public protocol SimpleNetworkLoader: Loader {
     /// Creates a `URLRequest` for a network loading request.
     /// - Parameter key: The key identifying the object to load.

@@ -4,6 +4,7 @@ import Foundation
 public typealias SomeLoader = Loader
 
 /// A type that can load data from a source and throw errors.
+@MainActor
 public protocol Loader: ObservableObject, ThrowsErrors {
     /// The type of key that identifies objects.
     associatedtype Key: Hashable
@@ -21,7 +22,7 @@ public protocol Loader: ObservableObject, ThrowsErrors {
     
     /// Begins loading the object.
     /// - Parameter key: The key identifying the object to load.
-    func load(key: Key)
+    func load(key: Key) async
     
     /// Creates a publisher that loads the object.
     /// - Parameter key: The key identifying the object to load.
@@ -29,7 +30,7 @@ public protocol Loader: ObservableObject, ThrowsErrors {
     
     /// Starts loading the object's data.
     /// - Parameter key: The key identifying the object to load.
-    func loadData(key: Key)
+    func loadData(key: Key) async
     
     /// Called when the object has been loaded successfully.
     /// - Parameters:
@@ -40,11 +41,11 @@ public protocol Loader: ObservableObject, ThrowsErrors {
 }
 
 public extension Loader {
-    func load(key: Key) {
-        loadData(key: key)
+    func load(key: Key) async {
+        await loadData(key: key)
     }
     
-    func loadData(key: Key) {
+    func loadData(key: Key) async {
         self.cancellable = self.createPublisher(key: key)?
             .subscribe(on: DispatchQueue.global(qos: .userInitiated))
             .receive(on: DispatchQueue.main)
@@ -68,7 +69,7 @@ public extension Loader {
 }
 
 public extension Loader where Key == GenericKey {
-    func load() {
-        load(key: .key)
+    func load() async {
+        await load(key: .key)
     }
 }

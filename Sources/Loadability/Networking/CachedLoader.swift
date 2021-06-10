@@ -1,6 +1,7 @@
 import Foundation
 
 /// A type that can load data from a source with caching.
+@MainActor
 public protocol CachedLoader: Loader where Key == Cache.Key, Object == Cache.Value {
     /// The type of cache.
     associatedtype Cache: AnySharedCache
@@ -10,10 +11,10 @@ public protocol CachedLoader: Loader where Key == Cache.Key, Object == Cache.Val
 }
 
 public extension CachedLoader {
-    func load(key: Key) {
+    func load(key: Key) async {
         loadCachedData(key: key)
         if cache.isValueStale(key) {
-            loadData(key: key)
+            await loadData(key: key)
         }
     }
     
@@ -34,15 +35,16 @@ public extension CachedLoader {
         completion(self.cache[key])
     }
     
+    @available(iOS 15.0, watchOS 15.0, macOS 15.0, *)
     func loadCompleted(key: Key, object: Object) {
-        DispatchQueue.global(qos: .userInteractive).async {
+        async {
             self.cache[key] = object
         }
     }
 }
 
 public extension CachedLoader where Key == GenericKey {
-    func load() {
-        load(key: .key)
+    func load() async {
+        await load(key: .key)
     }
 }

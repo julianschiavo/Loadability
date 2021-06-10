@@ -17,8 +17,8 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
     ///   - autoRemoveStaleItems: Whether to automatically remove stale items, defaults to `false`.
     ///   - folderURL: The folder in which to store the cache, defaults to the system cache directory.
     private init(name: String,
-         shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false,
-         folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first) {
+                 shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false,
+                 folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first) {
         
         guard let folderURL = folderURL else {
             fatalError("Invalid Folder URL")

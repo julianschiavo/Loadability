@@ -16,7 +16,7 @@ extension Error {
         return nsError.localizedDescription
     }
     
-    private var recoverySuggestion: String? {
+    var recoverySuggestion: String? {
         guard let suggestion = nsError.localizedRecoverySuggestion,
               !suggestion.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return nil }
         return nsError.localizedRecoverySuggestion
