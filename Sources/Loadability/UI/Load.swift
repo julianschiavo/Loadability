@@ -87,7 +87,7 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
     /// Presents an alert to the user if an error occurs.
     /// - Parameters:
     ///   - alertContent: Content to display in the alert.
-    public func displayingErrors(message: ((Error) -> String)?) -> some View {
+    public func displayingErrors(message: ((Error) -> String)? = nil) -> some View {
         var error: _LocalizedError?
         if let loaderError = loader.error {
             error = _LocalizedError(loaderError)
