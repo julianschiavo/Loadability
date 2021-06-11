@@ -10,17 +10,16 @@ public extension View {
             error = _LocalizedError(optionalError)
         }
         
-        return body
-            .alert(isPresented: isPresented, error: error) { _ in
-                Button("OK") {
-                    async {
-                        await MainActor.run {
-                            dismiss()
-                        }
+        return alert(isPresented: isPresented, error: error) { _ in
+            Button("OK") {
+                async {
+                    await MainActor.run {
+                        dismiss()
                     }
                 }
-            } message: { error in
-                Text(message?(error) ?? error.userVisibleTitle)
             }
+        } message: { error in
+            Text(message?(error) ?? error.userVisibleTitle)
+        }
     }
 }
