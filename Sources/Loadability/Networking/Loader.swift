@@ -75,13 +75,17 @@ public extension Loader {
         }
         
         return try await withCheckedThrowingContinuation { continuation in
+            var didFinish = false
             cancellable = publisher
                 .subscribe(on: DispatchQueue.global(qos: .userInitiated))
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
-                    guard case let .failure(error) = completion else { return }
+                    guard case let .failure(error) = completion, !didFinish else { return }
+                    didFinish = true
                     continuation.resume(throwing: error)
                 } receiveValue: { object in
+                    guard !didFinish else { return }
+                    didFinish = true
                     continuation.resume(returning: object)
                 }
         }

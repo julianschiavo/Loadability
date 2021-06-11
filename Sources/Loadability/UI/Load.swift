@@ -93,14 +93,13 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
             error = _LocalizedError(loaderError)
         }
         
-        return body
-            .alert(isPresented: $isErrorAlertPresented, error: error) { _ in
-                Button("OK") {
-                    loader.dismissError()
-                }
-            } message: { error in
-                Text(message?(error) ?? error.userVisibleTitle)
+        return alert(isPresented: $isErrorAlertPresented, error: error) { _ in
+            Button("OK") {
+                loader.dismissError()
             }
+        } message: { error in
+            Text(message?(error) ?? error.userVisibleTitle)
+        }
     }
 }
 
