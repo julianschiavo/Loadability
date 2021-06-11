@@ -57,6 +57,11 @@ public extension Loader {
         }
     }
     
+    func refresh(key: Key) async {
+        object = nil
+        await load(key: key)
+    }
+    
     func loadData(key: Key) async throws -> Object {
         guard let publisher = createPublisher(key: key) else {
             fatalError("You must implement either loadData or createPublisher.")
