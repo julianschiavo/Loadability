@@ -28,33 +28,56 @@ public protocol Loader: ObservableObject, ThrowsErrors {
     /// - Parameter key: The key identifying the object to load.
     func createPublisher(key: Key) -> AnyPublisher<Object, Error>?
     
-    /// Starts loading the object's data.
+    /// Starts loading the object's data. If you implement `loadData(key:)`, do not implement `createPublisher(key:)`.
     /// - Parameter key: The key identifying the object to load.
-    func loadData(key: Key) async
+    func loadData(key: Key) async throws -> Object
+    
+    /// Refreshes the data by re-loading it (this resets the cache).
+    /// - Parameter key: The key identifying the object to load.
+    func refresh(key: Key) async
     
     /// Called when the object has been loaded successfully.
     /// - Parameters:
     ///   - key: The key identifying the object that was loaded.
     ///   - object: The loaded object.
     func loadCompleted(key: Key, object: Object)
+    
+    /// Cancels the current loading operation.
     func cancel()
 }
 
 public extension Loader {
     func load(key: Key) async {
-        await loadData(key: key)
+        do {
+            let object = try await loadData(key: key)
+            self.object = object
+            loadCompleted(key: key, object: object)
+        } catch {
+            catchError(error)
+        }
     }
     
-    func loadData(key: Key) async {
-        self.cancellable = self.createPublisher(key: key)?
-            .subscribe(on: DispatchQueue.global(qos: .userInitiated))
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                self?.catchCompletion(completion)
-            } receiveValue: { [weak self] object in
-                self?.object = object
-                self?.loadCompleted(key: key, object: object)
-            }
+    func loadData(key: Key) async throws -> Object {
+        guard let publisher = createPublisher(key: key) else {
+            fatalError("You must implement either loadData or createPublisher.")
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            cancellable = publisher
+                .subscribe(on: DispatchQueue.global(qos: .userInitiated))
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    guard case let .failure(error) = completion else { return }
+                    continuation.resume(throwing: error)
+                } receiveValue: { object in
+                    continuation.resume(returning: object)
+                }
+        }
+    }
+    
+    func createPublisher(key: Key) -> AnyPublisher<Object, Error>? {
+        // Default implementation does nothing. This method is optional if `loadData(key:)` is implemented.
+        return nil
     }
     
     func loadCompleted(key: Key, object: Object) {

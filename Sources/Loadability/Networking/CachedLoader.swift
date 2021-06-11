@@ -12,31 +12,44 @@ public protocol CachedLoader: Loader where Key == Cache.Key, Object == Cache.Val
 
 public extension CachedLoader {
     func load(key: Key) async {
-        loadCachedData(key: key)
-        if cache.isValueStale(key) {
-            await loadData(key: key)
+        do {
+            let object: Object
+            
+            let cached = await loadCachedData(key: key)
+            if let cached = cached, !cache.isValueStale(key) {
+                object = cached
+            } else {
+                object = try await loadData(key: key)
+            }
+            
+            self.object = object
+            await loadCompleted(key: key, object: object)
+        } catch {
+            catchError(error)
         }
     }
     
     /// Attempts to load data from the cache.
     /// - Parameter key: The key identifying the object to load.
-    private func loadCachedData(key: Key) {
-        guard let object = self.cache[key] else { return }
-        DispatchQueue.main.async {
-            self.object = object
+    private func loadCachedData(key: Key) async -> Object? {
+        let handle = async {
+            self.cache[key]
         }
+        return await handle.get()
     }
     
     /// Attempts to fetch data from the cache.
     /// - Parameters:
     ///   - key: The key identifying the object to load.
     ///   - completion: A completion handler called with the object, or `nil` if no object was found.
-    func getCachedData(key: Key, completion: @escaping (Object?) -> Void) {
-        completion(self.cache[key])
+    func getCachedData(key: Key) async -> Object? {
+        let handle = async {
+            self.cache[key]
+        }
+        return await handle.get()
     }
     
-    @available(iOS 15.0, watchOS 15.0, macOS 15.0, *)
-    func loadCompleted(key: Key, object: Object) {
+    func loadCompleted(key: Key, object: Object) async {
         async {
             self.cache[key] = object
         }
