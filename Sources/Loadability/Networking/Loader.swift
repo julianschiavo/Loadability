@@ -20,6 +20,9 @@ public protocol Loader: ObservableObject, ThrowsErrors {
     /// An ongoing request.
     var cancellable: AnyCancellable? { get set }
     
+    /// An ongoing task.
+    var task: Task.Handle<Void, Error>? { get set }
+    
     /// Begins loading the object.
     /// - Parameter key: The key identifying the object to load.
     func load(key: Key) async
@@ -48,16 +51,20 @@ public protocol Loader: ObservableObject, ThrowsErrors {
 
 public extension Loader {
     func load(key: Key) async {
-        do {
+        task = async {
             let object = try await loadData(key: key)
             self.object = object
             loadCompleted(key: key, object: object)
+        }
+        do {
+            try await task?.get()
         } catch {
             catchError(error)
         }
     }
     
     func refresh(key: Key) async {
+        cancel()
         object = nil
         await load(key: key)
     }
@@ -91,6 +98,9 @@ public extension Loader {
     
     /// Cancels the ongoing load.
     func cancel() {
+        task?.cancel()
+        task = nil
+        
         cancellable?.cancel()
         cancellable = nil
     }
