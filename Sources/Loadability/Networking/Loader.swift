@@ -51,7 +51,7 @@ public protocol Loader: ObservableObject, ThrowsErrors {
 
 public extension Loader {
     func load(key: Key) async {
-        task = async(priority: .userInitiated) {
+        task = async {
             let object = try await loadData(key: key)
             self.object = object
             loadCompleted(key: key, object: object)
