@@ -51,19 +51,21 @@ public protocol Loader: ObservableObject, ThrowsErrors {
 
 public extension Loader {
     func load(key: Key) async {
-        task = async {
+        task = async(priority: .userInitiated) {
             let object = try await loadData(key: key)
             self.object = object
             loadCompleted(key: key, object: object)
         }
         do {
             try await task?.get()
+            task = nil
         } catch {
             catchError(error)
         }
     }
     
     func refresh(key: Key) async {
+        guard task == nil else { return }
         cancel()
         object = nil
         await load(key: key)
@@ -71,7 +73,7 @@ public extension Loader {
     
     func loadData(key: Key) async throws -> Object {
         guard let publisher = createPublisher(key: key) else {
-            fatalError("You must implement either loadData or createPublisher.")
+            fatalError("You must implement either loadData(key:) or createPublisher(key:).")
         }
         
         return try await withCheckedThrowingContinuation { continuation in
