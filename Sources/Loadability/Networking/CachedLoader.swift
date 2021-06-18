@@ -37,7 +37,7 @@ public extension CachedLoader {
         cancel()
         cache[key] = nil
         object = nil
-        await load(key: key)
+//        await load(key: key)
     }
     
     /// Attempts to load data from the cache.
