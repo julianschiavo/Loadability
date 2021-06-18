@@ -25,7 +25,7 @@ public protocol Loader: ObservableObject, ThrowsErrors {
     
     /// Begins loading the object.
     /// - Parameter key: The key identifying the object to load.
-    @discardableResult func load(key: Key) async -> Object
+    @discardableResult func load(key: Key) async -> Object?
     
     /// Creates a publisher that loads the object.
     /// - Parameter key: The key identifying the object to load.
