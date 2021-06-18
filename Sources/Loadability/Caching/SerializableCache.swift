@@ -15,10 +15,12 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
     /// - Parameters:
     ///   - name: The unique name for the cache.
     ///   - autoRemoveStaleItems: Whether to automatically remove stale items, defaults to `false`.
+    /// - Parameter itemLifetime: How many milliseconds items are valid for, defaults to 3600. This is not used if `autoRemoveStaleItems` is equal to `false`.
     ///   - folderURL: The folder in which to store the cache, defaults to the system cache directory.
     private init(
         name: String,
         shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false,
+        itemLifetime: TimeInterval = 3600,
         folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
     ) {
         
@@ -28,7 +30,7 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
         
         self.name = name
         self.folderURL = folderURL
-        super.init(shouldAutomaticallyRemoveStaleItems: autoRemoveStaleItems)
+        super.init(shouldAutomaticallyRemoveStaleItems: autoRemoveStaleItems, itemLifetime: itemLifetime)
         
         _cache.delegate = keyLedger
     }
