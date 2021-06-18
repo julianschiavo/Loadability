@@ -32,6 +32,14 @@ public extension CachedLoader {
         }
     }
     
+    func refresh(key: Key) async {
+        guard task == nil else { return }
+        cancel()
+        cache[key] = nil
+        object = nil
+        await load(key: key)
+    }
+    
     /// Attempts to load data from the cache.
     /// - Parameter key: The key identifying the object to load.
     private func loadCachedData(key: Key) async -> Object? {
