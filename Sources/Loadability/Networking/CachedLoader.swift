@@ -11,8 +11,8 @@ public protocol CachedLoader: Loader where Key == Cache.Key, Object == Cache.Val
 }
 
 public extension CachedLoader {
-    func load(key: Key) async {
-        task = async {
+    @discardableResult func load(key: Key) async -> Object? {
+        let task = async { () -> Object in
             let object: Object
             
             let cached = await loadCachedData(key: key)
@@ -24,11 +24,17 @@ public extension CachedLoader {
             
             self.object = object
             await loadCompleted(key: key, object: object)
+            return object
         }
+        self.task = task
+        
         do {
-            try await task?.get()
+            let object = try await task.get()
+            self.task = nil
+            return object
         } catch {
             catchError(error)
+            return nil
         }
     }
     

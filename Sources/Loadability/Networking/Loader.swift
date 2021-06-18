@@ -21,11 +21,11 @@ public protocol Loader: ObservableObject, ThrowsErrors {
     var cancellable: AnyCancellable? { get set }
     
     /// An ongoing task.
-    var task: Task.Handle<Void, Error>? { get set }
+    var task: Task.Handle<Object, Error>? { get set }
     
     /// Begins loading the object.
     /// - Parameter key: The key identifying the object to load.
-    func load(key: Key) async
+    @discardableResult func load(key: Key) async -> Object
     
     /// Creates a publisher that loads the object.
     /// - Parameter key: The key identifying the object to load.
@@ -50,17 +50,22 @@ public protocol Loader: ObservableObject, ThrowsErrors {
 }
 
 public extension Loader {
-    func load(key: Key) async {
-        task = async {
+    @discardableResult func load(key: Key) async -> Object? {
+        let task = async { () -> Object in
             let object = try await loadData(key: key)
             self.object = object
             loadCompleted(key: key, object: object)
+            return object
         }
+        self.task = task
+        
         do {
-            try await task?.get()
-            task = nil
+            let object = try await task.get()
+            self.task = nil
+            return object
         } catch {
             catchError(error)
+            return nil
         }
     }
     
