@@ -118,7 +118,7 @@ public extension Loader {
 }
 
 public extension Loader where Key == GenericKey {
-    func load() async {
+    @discardableResult func load() async -> Object? {
         await load(key: .key)
     }
 }

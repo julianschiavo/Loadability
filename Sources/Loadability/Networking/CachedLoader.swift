@@ -74,7 +74,7 @@ public extension CachedLoader {
 }
 
 public extension CachedLoader where Key == GenericKey {
-    func load() async {
+    @discardableResult func load() async -> Object? {
         await load(key: .key)
     }
 }
