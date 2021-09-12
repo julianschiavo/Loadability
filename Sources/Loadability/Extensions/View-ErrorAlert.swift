@@ -12,7 +12,7 @@ public extension View {
         
         return alert(isPresented: isPresented, error: error) { _ in
             Button("OK") {
-                async {
+                Task {
                     await MainActor.run {
                         dismiss()
                     }

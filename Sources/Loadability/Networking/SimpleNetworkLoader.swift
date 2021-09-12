@@ -24,10 +24,10 @@ public extension SimpleNetworkLoader {
 
 public extension SimpleNetworkLoader where Object: Codable {
     func decode(_ data: Data, key: Key) async throws -> Object {
-        let handle = async { () -> Object in
+        let handle = Task { () -> Object in
             let decoder = JSONDecoder()
             return try decoder.decode(Object.self, from: data)
         }
-        return try await handle.get()
+        return try await handle.value
     }
 }

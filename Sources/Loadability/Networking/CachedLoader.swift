@@ -12,7 +12,7 @@ public protocol CachedLoader: Loader where Key == Cache.Key, Object == Cache.Val
 
 public extension CachedLoader {
     @discardableResult func load(key: Key) async -> Object? {
-        let task = async { () -> Object in
+        let task = Task { () -> Object in
             let object: Object
             
             let cached = await loadCachedData(key: key)
@@ -29,7 +29,7 @@ public extension CachedLoader {
         self.task = task
         
         do {
-            let object = try await task.get()
+            let object = try await task.value
             self.task = nil
             return object
         } catch {
@@ -41,7 +41,7 @@ public extension CachedLoader {
     func refresh(key: Key) async {
         guard task == nil else { return }
         cancel()
-        cache[key] = nil
+        await cache.remove(key)
         object = nil
 //        await load(key: key)
     }
@@ -49,10 +49,10 @@ public extension CachedLoader {
     /// Attempts to load data from the cache.
     /// - Parameter key: The key identifying the object to load.
     private func loadCachedData(key: Key) async -> Object? {
-        let handle = async {
-            self.cache[key]
+        let handle = Task {
+            await self.cache.value(for: key)
         }
-        return await handle.get()
+        return await handle.value
     }
     
     /// Attempts to fetch data from the cache.
@@ -60,15 +60,15 @@ public extension CachedLoader {
     ///   - key: The key identifying the object to load.
     ///   - completion: A completion handler called with the object, or `nil` if no object was found.
     func getCachedData(key: Key) async -> Object? {
-        let handle = async {
-            self.cache[key]
+        let handle = Task {
+            await self.cache.value(for: key)
         }
-        return await handle.get()
+        return await handle.value
     }
     
     func loadCompleted(key: Key, object: Object) async {
-        async {
-            self.cache[key] = object
+        Task {
+            await self.cache.update(key: key, to: object)
         }
     }
 }
