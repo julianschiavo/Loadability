@@ -41,7 +41,7 @@ public extension CachedLoader {
     func refresh(key: Key) async {
         guard task == nil else { return }
         cancel()
-        await cache.removeValue(for: key)
+        try? await cache.removeValue(for: key)
         object = nil
 //        await load(key: key)
     }
@@ -50,7 +50,7 @@ public extension CachedLoader {
     /// - Parameter key: The key identifying the object to load.
     private func loadCachedData(key: Key) async -> Object? {
         let handle = Task {
-            await self.cache.value(for: key)
+            try? await self.cache.value(for: key)
         }
         return await handle.value
     }
@@ -61,14 +61,14 @@ public extension CachedLoader {
     ///   - completion: A completion handler called with the object, or `nil` if no object was found.
     func getCachedData(key: Key) async -> Object? {
         let handle = Task {
-            await self.cache.value(for: key)
+            try? await self.cache.value(for: key)
         }
         return await handle.value
     }
     
     func loadCompleted(key: Key, object: Object) async {
         Task {
-            await self.cache.update(key: key, to: object)
+            try? await self.cache.update(key: key, to: object)
         }
     }
 }

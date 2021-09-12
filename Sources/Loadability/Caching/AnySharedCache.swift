@@ -4,8 +4,8 @@ public protocol AnySharedCache {
     associatedtype Value
     
 //    static subscript(key: Key) -> Value? { get set }
-    static func value(for key: Key) async -> Value?
-    static func update(key: Key, to value: Value) async
-    static func removeValue(for key: Key) async
+    static func value(for key: Key) async throws -> Value?
+    static func update(key: Key, to value: Value) async throws
+    static func removeValue(for key: Key) async throws
     static func isValueStale(_ key: Key) -> Bool
 }
