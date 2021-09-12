@@ -41,7 +41,7 @@ public extension CachedLoader {
     func refresh(key: Key) async {
         guard task == nil else { return }
         cancel()
-        await cache.remove(key)
+        await cache.removeValue(for: key)
         object = nil
 //        await load(key: key)
     }
