@@ -10,7 +10,7 @@ public extension SharedCache {
     /// Accesses the value associated with the given key.
     /// - Parameter key: The key to find in the cache.
     /// - Returns: The value associated with `key` if `key` is in the cache; otherwise, `nil`.
-    static func value(for key: Key) async -> Value? {
+    static func value(for key: Key) async throws -> Value? {
         shared[key]
     }
     
@@ -18,13 +18,13 @@ public extension SharedCache {
     /// - Parameters:
     ///   - value: The new value to add to the cache.
     ///   - key: The key to associate with `value`. If `key` already exists in the cache, `value` replaces the existing associated value. If `key` isn’t already a key of the cache, the (`key`, `value`) pair is added.
-    static func update(key: Key, to newValue: Value) async {
+    static func update(key: Key, to newValue: Value) async throws {
         shared[key] = newValue
     }
     
     /// Removes the given key and its associated value from the cache.
     /// - Parameter key: The key to remove along with its associated value.
-    static func removeValue(for key: Key) async {
+    static func removeValue(for key: Key) async throws {
         shared[key] = nil
     }
     
