@@ -15,10 +15,14 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
     /// - Parameters:
     ///   - name: The unique name for the cache.
     ///   - autoRemoveStaleItems: Whether to automatically remove stale items, defaults to `false`.
+    ///   - itemLifetime: How many milliseconds items are valid for, defaults to 3600. This is not used if `autoRemoveStaleItems` is equal to `false`.
     ///   - folderURL: The folder in which to store the cache, defaults to the system cache directory.
-    private init(name: String,
-         shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false,
-         folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first) {
+    private init(
+        name: String,
+        shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false,
+        itemLifetime: TimeInterval = 3600,
+        folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+    ) {
         
         guard let folderURL = folderURL else {
             fatalError("Invalid Folder URL")
@@ -26,7 +30,7 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
         
         self.name = name
         self.folderURL = folderURL
-        super.init(shouldAutomaticallyRemoveStaleItems: autoRemoveStaleItems)
+        super.init(shouldAutomaticallyRemoveStaleItems: autoRemoveStaleItems, itemLifetime: itemLifetime)
         
         _cache.delegate = keyLedger
     }
@@ -73,11 +77,15 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
     /// - Parameters:
     ///   - name: The unique name of the cache.
     ///   - shouldAutomaticallyRemoveStaleItems: Whether to automatically remove stale items, defaults to `false`.
+    ///   - itemLifetime: How many milliseconds items are valid for, defaults to 3600. This is not used if `autoRemoveStaleItems` is equal to `false`.
     ///   - folderURL: The folder in which to store the cache, defaults to the system cache directory.
     /// - Returns: The loaded cache.
-    public static func load(name: String,
-                     shouldAutomaticallyRemoveStaleItems: Bool = false,
-                     folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first) -> SerializableCache<Key, Value> {
+    public static func load(
+        name: String,
+        shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false,
+        itemLifetime: TimeInterval = 3600,
+        folderURL: URL? = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+    ) -> SerializableCache<Key, Value> {
         
         guard let folderURL = folderURL else {
             fatalError("Invalid Folder URL")
@@ -90,11 +98,12 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
             cache.name = name // Setting after decoding avoids re-saving cache to disk unnescessarily
             return cache
         } catch {
-            print("[Cache] Failed to load.",
+            print("[Cache] Failed to load (Name: \(name)).",
                   error.localizedDescription,
                   (error as NSError).localizedRecoverySuggestion ?? "")
             
-            let empty = SerializableCache(name: name, shouldAutomaticallyRemoveStaleItems: shouldAutomaticallyRemoveStaleItems)
+            let empty = SerializableCache(name: name, shouldAutomaticallyRemoveStaleItems: autoRemoveStaleItems, itemLifetime: itemLifetime)
+            empty.save()
             return empty
         }
     }
@@ -110,15 +119,26 @@ public final class SerializableCache<Key: Codable & Hashable & Identifiable, Val
         keyLedger.insert(entry.key, to: self)
     }
     
+    /// Removes the given key and its associated value from the cache.
+    /// - Parameter key: The key to remove along with its associated value.
+    override final func removeValue(forKey key: Key) {
+        _cache.removeObject(forKey: _Key(key))
+        keyLedger.remove(key, from: self)
+    }
+    
     /// A ledger that stores a list of keys, conforming to `NSCacheDelegate` to automatically remove evicted keys.
     final class KeyLedger: NSObject, NSCacheDelegate {
         /// The list of keys.
         private(set) final var keys = Set<Key>()
         
         final func insert(_ key: Key, to cache: SerializableCache<Key, Value>) {
-            if keys.insert(key).inserted {
-                cache.save()
-            }
+            guard keys.insert(key).inserted else { return }
+            cache.save()
+        }
+        
+        final func remove(_ key: Key, from cache: SerializableCache<Key, Value>) {
+            keys.remove(key)
+            cache.save()
         }
         
         final func cache(_ cache: NSCache<AnyObject, AnyObject>, willEvictObject object: Any) {

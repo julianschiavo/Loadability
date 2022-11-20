@@ -6,6 +6,9 @@ public class Cache<Key: Hashable & Identifiable, Value> {
     /// Whether the cache automatically removes stale items.
     final let autoRemoveStaleItems: Bool
     
+    /// How many milliseconds items are valid for, defaults to 3600. This is not used if `autoRemoveStaleItems` is equal to `false`.
+    final let itemLifetime: TimeInterval
+    
     /// The wrapped `NSCache`.
     final let _cache = NSCache<_Key, _Entry>()
     
@@ -13,8 +16,10 @@ public class Cache<Key: Hashable & Identifiable, Value> {
     
     /// Creates a new `Cache`
     /// - Parameter autoRemoveStaleItems: Whether to automatically remove stale items, `false` by default.
-    public init(shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false) {
+    /// - Parameter itemLifetime: How many milliseconds items are valid for, defaults to 3600. This is not used if `autoRemoveStaleItems` is equal to `false`.
+    public init(shouldAutomaticallyRemoveStaleItems autoRemoveStaleItems: Bool = false, itemLifetime: TimeInterval = 3600) {
         self.autoRemoveStaleItems = autoRemoveStaleItems
+        self.itemLifetime = itemLifetime
     }
     
     /// Accesses the value associated with the given key for reading and writing. When you assign a value for a key and that key already exists, the cache overwrites the existing value. If the cache doesn’t contain the key, the key and value are added as a new key-value pair. If you assign `nil` as the value for the given key, the cache removes that key and its associated value.
@@ -72,7 +77,8 @@ public class Cache<Key: Hashable & Identifiable, Value> {
     ///   - value: The new value to add to the cache.
     ///   - key: The key to associate with `value`. If `key` already exists in the cache, `value` replaces the existing associated value. If `key` isn’t already a key of the cache, the (`key`, `value`) pair is added.
     ///   - expirationDate: The date at which the entry will become stale, and be reloaded.
-    final func updateValue(_ value: Value, forKey key: Key, expirationDate: Date = Date().addingTimeInterval(3600)) {
+    final func updateValue(_ value: Value, forKey key: Key, expirationDate suggestedExpirationDate: Date? = nil) {
+        let expirationDate = suggestedExpirationDate ?? Date().addingTimeInterval(itemLifetime)
         let _key = _Key(key)
         let entry = _Entry(key: key, value: value, expirationDate: expirationDate)
         updateEntry(entry, forKey: _key)
@@ -88,16 +94,16 @@ public class Cache<Key: Hashable & Identifiable, Value> {
     
     /// Removes the given key and its associated value from the cache.
     /// - Parameter key: The key to remove along with its associated value.
-    private final func removeValue(forKey key: Key) {
+    func removeValue(forKey key: Key) {
         let key = _Key(key)
-        removeValue(forKey: key)
+        _cache.removeObject(forKey: key)
     }
     
     /// Removes the given key and its associated value from the cache.
     /// - Parameter key: The key to remove along with its associated value.
-    private final func removeValue(forKey key: _Key) {
-        _cache.removeObject(forKey: key)
-    }
+//    private final func removeValue(forKey key: _Key) {
+//        
+//    }
     
     /// Empties the cache.
     private final func removeAll() {

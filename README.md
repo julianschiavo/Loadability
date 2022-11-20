@@ -1,6 +1,8 @@
 # 📩 Loadability
 ### Powerful, modern networking and caching with SwiftUI support
 
+**This package has changed since the documentation was updated to support newer language features. To support older versions of operating systems, see the [deprecated branch](https://github.com/julianschiavo/Loadability/tree/deprecated).**
+
 <br>
 
 **Loadability** is an advanced networking and caching library for Swift that allows you to effortlessly implement a custom networking and/or caching stack in your app, with native support for `Combine` and `SwiftUI`.

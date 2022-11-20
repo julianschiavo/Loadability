@@ -28,6 +28,9 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
         }
     }
     
+    /// Whether an error alert is currently presented.
+    @State private var isErrorAlertPresented = false
+    
     public init(with loader: Loader,
          key: Loader.Key,
          objectKeyPath: KeyPath<Loader.Object, Value?>,
@@ -59,8 +62,8 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
     
     public var body: some View {
         bodyContent
-            .onAppear {
-                loader.load(key: key)
+            .task {
+                await loader.load(key: key)
             }
             .onDisappear {
                 loader.cancel()
@@ -83,9 +86,20 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
     
     /// Presents an alert to the user if an error occurs.
     /// - Parameters:
-    ///   - alertContent: Content to display in the alert.
-    public func displayingErrors(_ alertContent: ((Error) -> Alert)?) -> some View {
-        body.alert(errorBinding: $loader.error, alert: alertContent)
+    ///   - message: Content to display in the alert.
+    public func displayingErrors(message: ((Error) -> String)? = nil) -> some View {
+        var error: _LocalizedError?
+        if let loaderError = loader.error {
+            error = _LocalizedError(loaderError)
+        }
+        
+        return alert(isPresented: $isErrorAlertPresented, error: error) { _ in
+            Button("OK") {
+                loader.dismissError()
+            }
+        } message: { error in
+            Text(message?(error) ?? error.userVisibleTitle)
+        }
     }
 }
 
