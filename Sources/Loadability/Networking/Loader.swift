@@ -43,10 +43,10 @@ public protocol Loader: ObservableObject, ThrowsErrors {
     /// - Parameters:
     ///   - key: The key identifying the object that was loaded.
     ///   - object: The loaded object.
-    func loadCompleted(key: Key, object: Object)
+    func loadCompleted(key: Key, object: Object) async
     
     /// Cancels the current loading operation.
-    func cancel()
+    func cancel() async
 }
 
 public extension Loader {
@@ -54,7 +54,7 @@ public extension Loader {
         let task = Task { () -> Object in
             let object = try await loadData(key: key)
             self.object = object
-            loadCompleted(key: key, object: object)
+            await loadCompleted(key: key, object: object)
             return object
         }
         self.task = task
@@ -71,7 +71,7 @@ public extension Loader {
     
     func refresh(key: Key) async {
         guard task == nil else { return }
-        cancel()
+        await cancel()
         object = nil
         await load(key: key)
     }
@@ -103,12 +103,12 @@ public extension Loader {
         return nil
     }
     
-    func loadCompleted(key: Key, object: Object) {
+    func loadCompleted(key: Key, object: Object) async {
         // Default implementation does nothing. This is used by the more advanced loaders to allow for inserting cache events.
     }
     
     /// Cancels the ongoing load.
-    func cancel() {
+    func cancel() async {
         task?.cancel()
         task = nil
         

@@ -5,7 +5,7 @@ import Foundation
 public protocol SimpleNetworkLoader: Loader {
     /// Creates a `URLRequest` for a network loading request.
     /// - Parameter key: The key identifying the object to load.
-    func createRequest(for key: Key) -> URLRequest
+    func createRequest(for key: Key) async -> URLRequest
     
     /// Decodes data received from a network request into the object.
     /// - Parameters:
@@ -16,7 +16,7 @@ public protocol SimpleNetworkLoader: Loader {
 
 public extension SimpleNetworkLoader {
     func loadData(key: Key) async throws -> Object {
-        let request = createRequest(for: key)
+        let request = await createRequest(for: key)
         let (data, _) = try await URLSession.shared.data(for: request)
         return try await self.decode(data, key: key)
     }

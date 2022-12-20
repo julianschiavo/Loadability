@@ -66,7 +66,9 @@ public struct Load<Loader: SomeLoader, Value, Content: View, PlaceholderContent:
                 await loader.load(key: key)
             }
             .onDisappear {
-                loader.cancel()
+                Task {
+                    await loader.cancel()
+                }
             }
     }
     
