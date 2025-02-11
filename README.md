@@ -1,6 +1,6 @@
 # 📩 Loadability
 ### Powerful, modern networking and caching with SwiftUI support
-#### v1.0.5
+#### v1.0.6
 
 **This package has changed since the documentation was updated to add support for newer language features (async/await). To support older versions of operating systems, see the [deprecated branch](https://github.com/julianschiavo/Loadability/tree/deprecated).**
 
